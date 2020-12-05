@@ -24,8 +24,8 @@
 # EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 font_copyright = "Copyright 2020 Frank D. Martinez M."
-font_name = "marzd-icons"
-font_family = "marzd-icons"
+font_name = "my-icons"
+font_family = "my-icons"
 font_start_code = 0xe000
 
 # Directories from where to import svg icons
