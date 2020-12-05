@@ -1,0 +1,4 @@
+build/
+*.pyc
+icon_map.py
+select_cache.py
