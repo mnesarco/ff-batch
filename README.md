@@ -96,6 +96,12 @@ build
 * FontForge has its own free software license.
 * Bootstrap-icons is under MIT license.
 
+## Qt QML Useful Links for icon fonts integration
+
+ * https://stackoverflow.com/questions/47788300/how-to-use-font-awesome-in-qml
+ * https://doc.qt.io/qt-5/qml-qtquick-fontloader.html
+
 ## Additional Disclaimers
 
 * Developed and tested on Linux only, it should work on MacOS and Windows but I have not tested.
+
