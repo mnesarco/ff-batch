@@ -74,7 +74,7 @@ build
   |
   +-- my-icons-f.ttf      // Font with all icons
   |
-  +-- marzd-icons.ttf     // Font with selected icons
+  +-- my-icons.ttf        // Font with selected icons
 
 ```
 
