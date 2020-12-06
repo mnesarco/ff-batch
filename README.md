@@ -101,6 +101,13 @@ build
  * https://stackoverflow.com/questions/47788300/how-to-use-font-awesome-in-qml
  * https://doc.qt.io/qt-5/qml-qtquick-fontloader.html
 
+## IMPORTANT NOTICE
+
+If you want to preserve glyph codes between runs, you must preserve these generated files:
+
+ * icon_map.py
+ * select_cache.py
+
 ## Additional Disclaimers
 
 * Developed and tested on Linux only, it should work on MacOS and Windows but I have not tested.
