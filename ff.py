@@ -63,6 +63,8 @@ for key, icon in select.maps.items():
     print("\n%s:\n  file: %s\n  code: %s" % (icon['name'], icon['path'], hex(icon['code'])))
 
 font.generate('%s/%s.ttf' % (build_dir, font.fontname))
+font.generate('%s/%s.otf' % (build_dir, font.fontname))
+font.generate('%s/%s.dfont' % (build_dir, font.fontname))
 
 # +-------------------------------------------------+
 # | Full Font                                       |
