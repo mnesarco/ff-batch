@@ -101,7 +101,9 @@ def cpp_icons(config):
         f.write(f'// Generated: {datetime.now()}\n')
         f.write(f'// Source: {os.path.realpath(config.__file__)}\n\n')
 
-        f.write(f'#define {namespace}_{"FontFamily":<32} "{config.font_family}";\n')
+        f.write(f'#define {namespace}_{"Font_Family":<32} "{config.font_family}";\n')
+        f.write(f'#define {namespace}_{"Font_StartCode":<32} {hex(config.font_start_code)};\n')
+        f.write(f'#define {namespace}_{"Font_EndCode":<32} {hex(config.font_end_code)};\n')
         for key,m in icons.items():
             if m['code'] > 0:
                 code = "U+" + hex(m['code'])[2:]
@@ -110,7 +112,9 @@ def cpp_icons(config):
 
         if getattr(config, 'gen_cpp_constexpr', False):
             f.write(f'\nnamespace {namespace}\n{{\n')       
-            f.write(f'    constexpr auto {"FontFamily":<32} = "{config.font_family}";\n')
+            f.write(f'    constexpr auto {"Font_Family":<32} = "{config.font_family}";\n')
+            f.write(f'    constexpr auto {"Font_StartCode":<32} = {namespace}_Font_StartCode;\n')
+            f.write(f'    constexpr auto {"Font_EndCode":<32} = {namespace}_Font_EndCode;\n')
             for key,m in icons.items():
                 if m['code'] > 0:
                     f.write(f'    constexpr auto {m["name"]:<32} = {namespace}_{m["name"]};\n')
@@ -155,6 +159,7 @@ def run_fontforge(config):
                 if src['code'] != 0:
                     last += 1
         f.write("}\n")
+        setattr(config, 'font_end_code', last-1)
     process = subprocess.Popen(f'fontforge -lang=py -script ff.py "{config.build_dir}"', shell=True, env={"PYTHONPATH": "."})
     try:
         err = process.wait(30)

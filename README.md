@@ -7,6 +7,7 @@ Script to generate true type icon fonts for applications from collections of svg
  * TrueType font generation
  * Combination from multiple icon collections
  * Qt QML component generation
+ * C/C++ header file generation
  * Html index generation to show the results
 
 ## Usage
@@ -116,6 +117,10 @@ build
 
  * https://stackoverflow.com/questions/47788300/how-to-use-font-awesome-in-qml
  * https://doc.qt.io/qt-5/qml-qtquick-fontloader.html
+
+## Dear ImGui icon fonts integration
+
+* https://github.com/ocornut/imgui/blob/master/docs/FONTS.md#using-icon-fonts
 
 ## IMPORTANT NOTICE
 
