@@ -61,6 +61,20 @@ select = [
     ('bs-layers',                   'layers'),
     ('my-example',                  'geom'),
 ]
+
+
+# Generate qml component
+gen_qml = True
+
+# Generate html demo
+gen_html = True
+
+# Generate C++ Header file
+gen_cpp = True
+gen_cpp_header_file = "my-cpp-header-file.hpp"  # [Optional] defaults to {font_name}.h
+gen_cpp_namespace = "MyIcons"                   # [Optional] defaults to Icon 
+gen_cpp_constexpr = True                        # [Optional] defaults to False
+
 ```
 
 ## Results
@@ -68,13 +82,15 @@ select = [
 ```
 build 
   |
-  +-- FontIcons.html      // Font preview html
+  +-- FontIcons.html           // Font preview html
   |
-  +-- FontIcons.qml       // Qt Qml Component
+  +-- FontIcons.qml            // Qt Qml Component
   |
-  +-- my-icons-f.ttf      // Font with all icons
+  +-- my-cpp-header-file.hpp   // C++ Header file with constants
   |
-  +-- my-icons.ttf        // Font with selected icons
+  +-- my-icons-f.ttf           // Font with all icons
+  |
+  +-- my-icons.ttf             // Font with selected icons
 
 ```
 

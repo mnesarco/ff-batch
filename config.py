@@ -56,3 +56,15 @@ select = [
     ('my-example',                  'geom'),
 ]
 
+# Generate qml component
+gen_qml = True
+
+# Generate html demo
+gen_html = True
+
+# Generate C++ Header file
+gen_cpp = True
+gen_cpp_header_file = "my-cpp-header-file.hpp"  # [Optional] defaults to {font_name}.h
+gen_cpp_namespace = "MyIcons"                   # [Optional] defaults to Icon 
+gen_cpp_constexpr = True                        # [Optional] defaults to False
+

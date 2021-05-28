@@ -77,7 +77,7 @@ def qml_icons(config):
     print(f"Generating qml component => {config.build_dir}/FontIcons.qml")
     with open(f'{config.build_dir}/FontIcons.qml', 'w') as f:
         f.write(f'// Generated: {datetime.now()}\n')
-        f.write(f'// Source: {os.path.realpath(__file__)}\n')
+        f.write(f'// Source: {os.path.realpath(config.__file__)}\n')
         f.write('pragma Singleton\n\n')
         f.write('import QtQuick\n\n')
         f.write('QtObject {\n')
@@ -89,6 +89,32 @@ def qml_icons(config):
                 space = " " * (41-len(m['name']))
                 f.write(f'    readonly property string {m["name"]}:{space}"{code}"\n')
         f.write('}\n')
+
+
+def cpp_icons(config):
+    from select_cache import maps as icons
+    header_file = getattr(config, 'gen_cpp_header_file', f"{config.font_name}.h")
+    namespace = getattr(config, 'gen_cpp_namespace', "Icon")
+    print(f"Generating cpp header => {config.build_dir}/{header_file}")
+    with open(f'{config.build_dir}/{header_file}', 'w') as f:
+        f.write(f'#pragma once\n')
+        f.write(f'// Generated: {datetime.now()}\n')
+        f.write(f'// Source: {os.path.realpath(config.__file__)}\n\n')
+
+        f.write(f'#define {namespace}_{"FontFamily":<32} "{config.font_family}";\n')
+        for key,m in icons.items():
+            if m['code'] > 0:
+                code = "U+" + hex(m['code'])[2:]
+                literal = repr( chr(m['code']).encode( 'utf-8' ))[ 2:-1 ]
+                f.write(f'#define {namespace}_{m["name"]:<32} "{literal}"; // {code}\n')
+
+        if getattr(config, 'gen_cpp_constexpr', False):
+            f.write(f'\nnamespace {namespace}\n{{\n')       
+            f.write(f'    constexpr auto {"FontFamily":<32} = "{config.font_family}";\n')
+            for key,m in icons.items():
+                if m['code'] > 0:
+                    f.write(f'    constexpr auto {m["name"]:<32} = {namespace}_{m["name"]};\n')
+            f.write('}\n')
 
 
 def run_fontforge(config):
@@ -286,8 +312,14 @@ if __name__ == '__main__':
 
     run_fontforge(config)
 
-    qml_icons(config)
-    html_icons(config)
+    if getattr(config, 'gen_qml', False):
+        qml_icons(config)
+
+    if getattr(config, 'gen_html', False):
+        html_icons(config)
+
+    if getattr(config, 'gen_cpp', False):
+        cpp_icons(config)
 
 
 
