@@ -112,7 +112,7 @@ def cpp_icons(config):
 
         if getattr(config, 'gen_cpp_constexpr', False):
             f.write(f'\nnamespace {namespace}\n{{\n')       
-            f.write(f'    constexpr auto {"Font_Family":<32} = "{config.font_family}";\n')
+            f.write(f'    constexpr auto {"Font_Family":<32} = {namespace}_Font_Family;\n')
             f.write(f'    constexpr auto {"Font_StartCode":<32} = {namespace}_Font_StartCode;\n')
             f.write(f'    constexpr auto {"Font_EndCode":<32} = {namespace}_Font_EndCode;\n')
             for key,m in icons.items():
