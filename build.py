@@ -118,6 +118,13 @@ def cpp_icons(config):
             for key,m in icons.items():
                 if m['code'] > 0:
                     f.write(f'    constexpr auto {m["name"]:<32} = {namespace}_{m["name"]};\n')
+
+            f.write(f'\n    namespace Code\n    {{\n')       
+            for key,m in icons.items():
+                if m['code'] > 0:
+                    f.write(f'        constexpr auto {m["name"]:<32} = {hex(m["code"])};\n')
+            f.write('    }\n')
+
             f.write('}\n')
 
 
