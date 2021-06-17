@@ -101,14 +101,14 @@ def cpp_icons(config):
         f.write(f'// Generated: {datetime.now()}\n')
         f.write(f'// Source: {os.path.realpath(config.__file__)}\n\n')
 
-        f.write(f'#define {namespace}_{"Font_Family":<32} "{config.font_family}";\n')
-        f.write(f'#define {namespace}_{"Font_StartCode":<32} {hex(config.font_start_code)};\n')
-        f.write(f'#define {namespace}_{"Font_EndCode":<32} {hex(config.font_end_code)};\n')
+        f.write(f'#define {namespace}_{"Font_Family":<32} "{config.font_family}"\n')
+        f.write(f'#define {namespace}_{"Font_StartCode":<32} {hex(config.font_start_code)}\n')
+        f.write(f'#define {namespace}_{"Font_EndCode":<32} {hex(config.font_end_code)}\n')
         for key,m in icons.items():
             if m['code'] > 0:
                 code = "U+" + hex(m['code'])[2:]
                 literal = repr( chr(m['code']).encode( 'utf-8' ))[ 2:-1 ]
-                f.write(f'#define {namespace}_{m["name"]:<32} "{literal}"; // {code}\n')
+                f.write(f'#define {namespace}_{m["name"]:<32} "{literal}" // {code}\n')
 
         if getattr(config, 'gen_cpp_constexpr', False):
             f.write(f'\nnamespace {namespace}\n{{\n')       
@@ -308,6 +308,70 @@ def html_icons(config):
         f.write('</body></html>\n')
 
 
+def cpp_font(config):
+    from select_cache import maps as icons
+    import struct
+    header_file = getattr(config, 'gen_cpp_data_file', f"{config.font_name}_data")
+    namespace = getattr(config, 'gen_cpp_namespace', "Icon")
+    font_file = f"{config.build_dir}/{config.font_name}.ttf"
+    print(f"Generating cpp data file => {config.build_dir}/{header_file}")
+    with open(f'{config.build_dir}/{header_file}.hpp', 'w') as f:
+        f.write("#pragma once\n\n")
+        f.write(f"namespace {namespace} {{\n")
+        f.write(f" namespace Font {{\n")
+        f.write(f"  extern const unsigned int FONT_DATA_SIZE;\n")
+        f.write(f"  extern const unsigned int FONT_DATA[];\n")
+        f.write(" }\n")
+        f.write("}\n")
+
+    with open(f'{config.build_dir}/{header_file}.cpp', 'w') as f:
+        f.write(f'#include "{header_file}.hpp"\n')
+        f.write(f"namespace {namespace} {{\n")
+        f.write(f" namespace Font {{\n")
+        f.write(f"  const unsigned int FONT_DATA_SIZE = {os.stat(font_file).st_size};\n")
+        f.write(f"  const unsigned int FONT_DATA[] = {{\n  ")
+        with open(font_file, 'rb') as bin:
+            n = 0
+            c = bin.read(4)
+            while (c):
+                val = struct.unpack("<L", c)[0]
+                f.write(f"{val:#010x}")
+                f.write(",")
+                n += 1
+                if n % 12 == 0:
+                    f.write("\n  ")
+                c = bin.read(4)
+        f.write("};\n")
+        f.write(" }\n")
+        f.write("}\n")
+
+def imgui_font(config):
+    from select_cache import maps as icons
+    cpp_header_file = getattr(config, 'gen_cpp_header_file', f"{config.font_name}.h")
+    data_header_file = getattr(config, 'gen_cpp_data_file', f"{config.font_name}_data.hpp")
+    header_file = getattr(config, 'gen_imgui_file', f"{config.font_name}_lib.hpp")
+    namespace = getattr(config, 'gen_cpp_namespace', "Icon")
+    print(f"Generating cpp data file => {config.build_dir}/{header_file}")
+    with open(f'{config.build_dir}/{header_file}', 'w') as f:
+        f.write( "#pragma once\n\n")
+        f.write( '#include <imgui/imgui.h>\n')
+        f.write(f'#include "{data_header_file}.hpp"\n')
+        f.write(f'#include "{cpp_header_file}"\n\n')
+        f.write(f"namespace {namespace} {{\n")
+        f.write( " namespace Font {\n")
+        f.write(f"  static const ImWchar ranges[] = {{ {namespace}::Font_StartCode , {namespace}::Font_EndCode, 0 }};\n")
+        f.write( "  inline void Setup(const float size, ImFontConfig* config) {\n")
+        f.write( "   if (config) {\n")
+        f.write( "    config->FontDataOwnedByAtlas = false;\n")
+        f.write( "   }\n")
+        f.write( "   auto& io = ImGui::GetIO();\n")
+        f.write( "   void* data = const_cast<unsigned int*>(FONT_DATA);\n")
+        f.write( "   io.Fonts->AddFontFromMemoryTTF(data, FONT_DATA_SIZE, size, config, ranges);\n")
+        f.write( "   io.Fonts->Build();\n")
+        f.write( "  }\n")
+        f.write( " }\n")
+        f.write( "}\n")
+
 if __name__ == '__main__':  
     import config
 
@@ -315,7 +379,7 @@ if __name__ == '__main__':
 
     try:
         if not os.path.exists(config.build_dir):
-            os.mkdir(config.build_dir)
+            os.makedirs(config.build_dir, exist_ok=True)
     except:
         sys.exit("Error creating build directory")   
 
@@ -332,6 +396,10 @@ if __name__ == '__main__':
 
     if getattr(config, 'gen_cpp', False):
         cpp_icons(config)
+        cpp_font(config)
+        if getattr(config, 'gen_imgui', False):
+            imgui_font(config)
+
 
 
 

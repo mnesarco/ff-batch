@@ -68,3 +68,6 @@ gen_cpp_header_file = "my-cpp-header-file.hpp"  # [Optional] defaults to {font_n
 gen_cpp_namespace = "MyIcons"                   # [Optional] defaults to Icon 
 gen_cpp_constexpr = True                        # [Optional] defaults to False
 
+# Generate ImGui Icon Font c++ files
+gen_imgui = True
+gen_imgui_file = "icons_lib.hpp"  # [Optional] defaults to {font_name}_lib.hpp
