@@ -311,7 +311,7 @@ def html_icons(config):
 if __name__ == '__main__':  
     import config
 
-    config.build_dir = "build"
+    config.build_dir = getattr(config, "build_dir", "build")
 
     try:
         if not os.path.exists(config.build_dir):
