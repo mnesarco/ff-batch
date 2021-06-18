@@ -102,7 +102,7 @@ build
 
 ## Included sample icons
 
-* A copy of Bootstrap-Icons is included for demostration purposes:
+* A copy of Bootstrap-Icons is included for demonstration purposes:
 
   * License: MIT
   * Source: https://icons.getbootstrap.com/
