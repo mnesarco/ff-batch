@@ -360,14 +360,17 @@ def imgui_font(config):
         f.write(f"namespace {namespace} {{\n")
         f.write( " namespace Font {\n")
         f.write(f"  static const ImWchar ranges[] = {{ {namespace}::Font_StartCode , {namespace}::Font_EndCode, 0 }};\n")
-        f.write( "  inline void Setup(const float size, ImFontConfig* config) {\n")
+        f.write( "  inline ImFont* Load(ImGuiIO& io, const float size, ImFontConfig* config) {\n")
+        f.write( "   void* data = const_cast<unsigned int*>(FONT_DATA);\n")
         f.write( "   if (config) {\n")
         f.write( "    config->FontDataOwnedByAtlas = false;\n")
+        f.write( "    return io.Fonts->AddFontFromMemoryTTF(data, FONT_DATA_SIZE, size, config, ranges);\n")
         f.write( "   }\n")
-        f.write( "   auto& io = ImGui::GetIO();\n")
-        f.write( "   void* data = const_cast<unsigned int*>(FONT_DATA);\n")
-        f.write( "   io.Fonts->AddFontFromMemoryTTF(data, FONT_DATA_SIZE, size, config, ranges);\n")
-        f.write( "   io.Fonts->Build();\n")
+        f.write( "   else {\n")
+        f.write( "    ImFontConfig dconf;\n")
+        f.write( "    dconf.FontDataOwnedByAtlas = false;\n")
+        f.write( "    return io.Fonts->AddFontFromMemoryTTF(data, FONT_DATA_SIZE, size, &dconf, ranges);\n")
+        f.write( "   }\n")
         f.write( "  }\n")
         f.write( " }\n")
         f.write( "}\n")
@@ -399,7 +402,3 @@ if __name__ == '__main__':
         cpp_font(config)
         if getattr(config, 'gen_imgui', False):
             imgui_font(config)
-
-
-
-

@@ -118,10 +118,6 @@ build
  * https://stackoverflow.com/questions/47788300/how-to-use-font-awesome-in-qml
  * https://doc.qt.io/qt-5/qml-qtquick-fontloader.html
 
-## Dear ImGui icon fonts integration
-
-* https://github.com/ocornut/imgui/blob/master/docs/FONTS.md#using-icon-fonts
-
 ## IMPORTANT NOTICE
 
 If you want to preserve glyph codes between runs, you must preserve these generated files:
@@ -133,3 +129,74 @@ If you want to preserve glyph codes between runs, you must preserve these genera
 
 * Developed and tested on Linux only, it should work on MacOS and Windows but I have not tested.
 
+## Dear ImGui icon fonts integration
+
+* Ref: https://github.com/ocornut/imgui/blob/master/docs/FONTS.md#using-icon-fonts
+
+In order to generate c++ sources to easily integrate in ImGui based applications add this options to the configuration file:
+
+```python
+gen_cpp = True                     # Enable c++ code generation
+
+gen_cpp_header_file = "icons.hpp"  # This is the file that will 
+                                   #   contains the icon constants
+
+gen_cpp_namespace = "Icon"         # This is the c++ namespace 
+                                   #   to enclose the generated code
+
+gen_cpp_constexpr = True           # Generate also numeric constants
+
+gen_cpp_data_file = "icons_data"   # This is the c++ file with the 
+                                   #   embeded font, so you don't need 
+                                   #   the .ttf at runtime. 
+                                   #   (note that no extension was specified 
+                                   #   because two files will be generated: .hpp and .cpp)
+
+gen_imgui = True                   # Enable ImGui api generation
+
+gen_imgui_file = "icons_lib.hpp"   # This is the c++ file with the function 
+                                   #   to load the Font into ImGui Atlas
+```
+
+The following files will be generated. You must add them to your project, there are no external dependencies __(only imgui)__:
+
+```
+icons.hpp
+icons_data.hpp
+icons_data.cpp
+icons_lib.hpp
+```
+
+
+Then you can setup the font in your ImGui App:
+
+```cpp
+#include <icons_lib.hpp>
+
+  // ...
+  
+  ImGuiIO& io = ImGui::GetIO();
+  ImFontConfig cfg;
+  cfg.MergeMode = true;
+  ImFont* font = Icon::Font::Load(io, 13.f, &cfg);
+
+  // Create the texture as usual ....
+
+```
+
+Finally you can use the icons:
+
+```cpp
+#include <icons.hpp>
+
+  // ...
+
+  //                ||||||||
+  if (ImGui::Button(Icon_eye " Demo"))
+  {
+      demo = true;
+  }
+
+  // ...
+
+```
