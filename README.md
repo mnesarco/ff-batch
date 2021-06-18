@@ -9,14 +9,16 @@ Script to generate true type icon fonts for applications from collections of svg
  * Qt QML component generation
  * C/C++ header file generation
  * Html index generation to show the results
+ * **HOT!!!** ImGui Embeded icon font generation
 
 ## Usage
 
-1. Download the zip and extract somewhere, or clone this repo.
-2. Add folders with svg icons
-3. Register your folders in config.py
-4. Map icons to glyphs in config.py
-5. run python build.py
+1. Verify FontForge and Python3 are installed and available on PATH
+2. Download the zip and extract somewhere, or clone this repo.
+3. Add folders with svg icons
+4. Register your folders in config.py
+5. Map icons to glyphs in config.py
+6. run python build.py
 
 ## Generate example font
 
@@ -72,9 +74,14 @@ gen_html = True
 
 # Generate C++ Header file
 gen_cpp = True
-gen_cpp_header_file = "my-cpp-header-file.hpp"  # [Optional] defaults to {font_name}.h
+gen_cpp_header_file = "icons.hpp"               # [Optional] defaults to {font_name}.h
 gen_cpp_namespace = "MyIcons"                   # [Optional] defaults to Icon 
 gen_cpp_constexpr = True                        # [Optional] defaults to False
+gen_cpp_data_file = "icons_data"                # [Optional] defaults to {font_name}_data
+
+# Generate ImGui Icon Font c++ files
+gen_imgui = True
+gen_imgui_file = "icons_lib.hpp"  # [Optional] defaults to {font_name}_lib.hpp
 
 ```
 
@@ -87,11 +94,17 @@ build
   |
   +-- FontIcons.qml            // Qt Qml Component
   |
-  +-- my-cpp-header-file.hpp   // C++ Header file with constants
-  |
   +-- my-icons-f.ttf           // Font with all icons
   |
   +-- my-icons.ttf             // Font with selected icons
+  |
+  +-- icons.hpp                // C++ Header file with icon constants
+  |
+  +-- icons_data.hpp           // Embedded font header
+  |
+  +-- icons_data.cpp           // Embedded font source
+  |
+  +-- icons_lib.hpp            // ImGui API
 
 ```
 
