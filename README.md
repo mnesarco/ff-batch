@@ -1,3 +1,5 @@
+# !!IMPORTANT!! This project is no longer maintained. New version is: https://github.com/mnesarco/bawr
+
 # ff-batch
 
 Script to generate true type icon fonts for applications from collections of svg files.
